@@ -22,7 +22,7 @@ namespace BasicExercises.Tests
             var expected1st = array[second];
             //When
             //We do a swap
-            int[] result = Excercise1.Swap(array, first, second);
+            Excercise1.Swap(array, first, second);
             //Then
             Assert.Equal(expected1st, array[first]);
             Assert.Equal(expected2nd, array[second]);

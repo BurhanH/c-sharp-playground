@@ -40,7 +40,7 @@ namespace BasicExercises
 
     public class Exercise2 : IStoreInventory
     {
-        private List<InventoryItem> theStore = new List<InventoryItem>();
+        private readonly List<InventoryItem> theStore = new List<InventoryItem>();
 
         public InventoryItem Buy(string name, int count)
         {

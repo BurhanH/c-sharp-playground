@@ -44,13 +44,32 @@ namespace BasicExercises
 
         public InventoryItem Buy(string name, int count)
         {
-            // TODO try-catch
-            // TODO what if Item is out-of-stock?
-            // if ( count < 0 ) {
-            //         throw new InvalidOperationException("Item count can not be negative!");
-            //     }
-            throw new NotImplementedException();
-            // TODO Waht should I return in case of Success or error?
+            if ( count < 0 ) {
+                    throw new InvalidOperationException("Item count can not be negative!");
+                }
+            var newItem = GetByName(name);
+            var previousCount = 0;
+            try
+            {
+                if (newItem.Name != null) {
+                    if ( newItem.Count < count ) {
+                        throw new InvalidOperationException("Don't have enough item/s in the stock to buy!");
+                }
+                    previousCount = newItem.Count;
+                    theStore.Remove(newItem);
+                    newItem = new InventoryItem
+                        {
+                            Name = name,
+                            Count = previousCount - count
+                        };
+                    theStore.Add(newItem);
+                }
+                return newItem;
+            }
+                catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public InventoryItem[] GetAll()
@@ -60,7 +79,7 @@ namespace BasicExercises
 
         public InventoryItem GetByName(string name)
         {
-            return theStore.Find( item => item.Name.Equals(name) );
+            return theStore.Find( item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase) );
         }
 
         public InventoryItem Stock(string name, int count)
@@ -68,14 +87,19 @@ namespace BasicExercises
             if ( count < 0 ) {
                     throw new InvalidOperationException("Item count can not be negative!");
                 }
-            // TODO if this item already in Stock I need increase a count
+            var newItem = GetByName(name);
+            var previousCount = 0;
             try
             {
-                var newItem = new InventoryItem
-                    {
-                        Name = name,
-                        Count = count
-                    };
+                if (newItem.Name != null) {
+                    previousCount = newItem.Count;
+                    theStore.Remove(newItem);
+                }
+                newItem = new InventoryItem
+                        {
+                            Name = name,
+                            Count = count + previousCount
+                        };
                 theStore.Add(newItem);
                 return newItem;
             }

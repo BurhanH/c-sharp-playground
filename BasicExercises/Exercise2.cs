@@ -49,27 +49,20 @@ namespace BasicExercises
                 }
             var newItem = GetByName(name);
             var previousCount = 0;
-            try
-            {
-                if (newItem.Name != null) {
-                    if ( newItem.Count < count ) {
-                        throw new InvalidOperationException("Don't have enough item/s in the stock to buy!");
+            if (newItem.Name != null) {
+                if ( newItem.Count < count ) {
+                    throw new InvalidOperationException("Don't have enough item/s in the stock to buy!");
                 }
-                    previousCount = newItem.Count;
-                    theStore.Remove(newItem);
-                    newItem = new InventoryItem
+                previousCount = newItem.Count;
+                theStore.Remove(newItem);
+                newItem = new InventoryItem
                         {
                             Name = name,
                             Count = previousCount - count
                         };
-                    theStore.Add(newItem);
+                theStore.Add(newItem);
                 }
-                return newItem;
-            }
-                catch (Exception e)
-            {
-                throw e;
-            }
+            return newItem;
         }
 
         public InventoryItem[] GetAll()
@@ -89,24 +82,17 @@ namespace BasicExercises
                 }
             var newItem = GetByName(name);
             var previousCount = 0;
-            try
-            {
-                if (newItem.Name != null) {
-                    previousCount = newItem.Count;
-                    theStore.Remove(newItem);
-                }
-                newItem = new InventoryItem
-                        {
-                            Name = name,
-                            Count = count + previousCount
-                        };
-                theStore.Add(newItem);
-                return newItem;
+            if (newItem.Name != null) {
+                previousCount = newItem.Count;
+                theStore.Remove(newItem);
             }
-                catch (Exception e)
-            {
-                throw e;
-            }
+            newItem = new InventoryItem
+                    {
+                        Name = name,
+                        Count = count + previousCount
+                    };
+            theStore.Add(newItem);
+            return newItem;
         }
     }
 

@@ -24,7 +24,7 @@
                     int tempStorage = array[index1];
                     array[index1] = array[index2];
                     array[index2] = tempStorage;
-                };
+                }
             return array;
         }
 

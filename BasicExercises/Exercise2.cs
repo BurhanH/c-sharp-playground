@@ -96,10 +96,19 @@ namespace BasicExercises
         }
     }
 
-    public struct InventoryItem
+    public struct InventoryItem : IEquatable<InventoryItem>
     {
         public string Name { get; set; }
 
         public int Count { get; set; }
+
+        public bool Equals(InventoryItem other) =>
+            string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+
+        public override bool Equals(object obj) =>
+            obj is InventoryItem i && Equals(i);
+
+        public override int GetHashCode() => Name.GetHashCode();
+
     }
 }

@@ -47,5 +47,25 @@ namespace BasicExercises.Tests
             }
 
         }
+        
+        [Fact]
+        public void Excercise1_sort_performance()
+        {
+            Random rand = new Random();
+            //Given
+            //an array with 100 000 random values.
+            int[] array = Enumerable.Range(0, 100000).Select(i => rand.Next()).ToArray();
+            //Do not use the built in sorting, that's cheating.
+            var expectedResult = array.OrderBy(t => t).ToArray();
+            //When
+            //We do a swap
+            int[] result = Excercise1.Sort(array);
+
+            for(var i=0; i< result.Length; ++i)
+            {
+                Assert.Equal(expectedResult[i], result[i]);
+            }
+
+        }
     }
 }

@@ -17,21 +17,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-
     - name: Restore dependencies
       run: dotnet restore
-
     - name: Build
       run: dotnet build --no-restore
-
     - name: Test
-      run: | 
-        dotnet test --no-build --verbosity normal
-        ls -R
-
-    - uses: actions/upload-artifact@v2
-      if: success() || failure()
-      with:
-        name: test-results
-        path: BasicExercises.Tests/bin/Debug/net5.0/*.Tests.dll
-        retention-days: 7
+      run: dotnet test --no-build --verbosity normal

@@ -13,5 +13,5 @@ jobs:
       with:
         artifact: test-results
         name: Xunit Tests
-        path: test-results.trx
+        path: '*.trx'
         reporter: dotnet-trx

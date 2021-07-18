@@ -24,14 +24,13 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
 
-    - name: Test
-      run: | 
-        dotnet test --no-build --verbosity normal
-        ls -R
-
-    - uses: actions/upload-artifact@v2
-      if: success() || failure()
+    - name: Test with dotnet
+      run: dotnet test --logger trx --results-directory "Test-Results"
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
       with:
-        name: test-results
-        path: BasicExercises.Tests/bin/Debug/net5.0/*.Tests.dll
+        name: dotnet-results
+        path: Test-Results
         retention-days: 7
+      if: ${{ always() }}

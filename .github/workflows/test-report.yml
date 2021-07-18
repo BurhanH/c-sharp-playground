@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: dorny/test-reporter@v1
       with:
-        artifact: dotnet-results
+        artifact: dotnet-test-results
         name: Xunit Tests
         path: '*.trx'
         reporter: dotnet-trx

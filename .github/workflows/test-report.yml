@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: dorny/test-reporter@v1
       with:
-        artifact: test-results            # artifact name
-        name: Xunit Tests                # Name of the check run which will be created
-        path: '*.dll'                     # Path to test results (inside artifact .zip)
-        reporter: dotnet-trx              # Format of test results
+        artifact: test-results
+        name: Xunit Tests
+        path: '*.Tests.dll'
+        reporter: dotnet-trx

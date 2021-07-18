@@ -25,12 +25,12 @@ jobs:
       run: dotnet build --no-restore
 
     - name: Test with dotnet
-      run: dotnet test --logger trx --results-directory "Test-Results"
+      run: dotnet test --logger "trx;LogFileName=test-results.trx"
       
     - name: Upload test results
       uses: actions/upload-artifact@v2
       with:
         name: dotnet-results
-        path: Test-Results
+        path: test-results.trx
         retention-days: 7
       if: ${{ always() }}

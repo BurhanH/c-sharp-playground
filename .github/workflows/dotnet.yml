@@ -30,7 +30,7 @@ jobs:
     - name: Upload test results
       uses: actions/upload-artifact@v2
       with:
-        name: dotnet-results
+        name: dotnet-test-results
         path: BasicExercises.Tests/TestResults/*.trx
         retention-days: 7
       if: ${{ always() }}

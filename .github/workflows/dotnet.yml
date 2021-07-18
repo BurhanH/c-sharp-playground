@@ -25,10 +25,8 @@ jobs:
       run: dotnet build --no-restore
 
     - name: Test with dotnet
-      run: | 
-        dotnet test --logger "trx;LogFileName=test-results.trx"
-        ls -R
-      
+      run: dotnet test --logger "trx;LogFileName=test-results.trx"
+
     - name: Upload test results
       uses: actions/upload-artifact@v2
       with:

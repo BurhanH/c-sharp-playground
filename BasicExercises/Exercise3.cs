@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System;
 
 namespace BasicExercises
 {
@@ -12,29 +10,59 @@ namespace BasicExercises
     public class Exercise3: IStoreInventory
     {
         private readonly IRepository<InventoryItem> theStore;
-        public Exercise3(IRepository<InventoryItem> repository)
-        {
-            theStore = repository;
-        }
-        
+        public Exercise3(IRepository<InventoryItem> repository) => theStore = repository;
+
         public InventoryItem Buy(string name, int count)
         {
-            throw new NotImplementedException();
+            if ( count <= 0 )
+            {
+                throw new InvalidOperationException("Item count can not be negative or zero!");
+            }
+            var item = GetByName(name);
+            if (item.Name != null)
+            {
+                if ( count > item.Count )
+                {
+                    throw new InvalidOperationException("Don't have enough item/s in the stock to buy!");
+                }
+                item.Count -= count;
+                theStore.Update(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase), item);
+            }
+            return item;
         }
 
         public InventoryItem[] GetAll()
         {
-            throw new NotImplementedException();
+            return theStore.GetAll();
         }
 
         public InventoryItem GetByName(string name)
         {
-            throw new NotImplementedException();
+            return theStore.Get( item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase) );
         }
 
         public InventoryItem Stock(string name, int count)
         {
-            throw new NotImplementedException();
+            if ( count <= 0 )
+            {
+                throw new InvalidOperationException("Item count can not be negative or zero!");
+            }
+            var item = GetByName(name);
+            if (item.Name != null)
+            {
+                item.Count += count;
+                theStore.Update(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase), item);
+            } 
+            else 
+            {
+                item = new InventoryItem
+                    {
+                        Name = name,
+                        Count = count
+                    };
+                theStore.Add(item);
+            }
+            return item;
         }
     }
 
@@ -54,7 +82,7 @@ namespace BasicExercises
         /// <summary>
         /// Update an item in the Repository
         /// </summary>
-        /// <param name="predicate">A  <see cref="Predicate{T}"/> to identify the item to update.</param>
+        /// <param name="predicate">A <see cref="Predicate{T}"/> to identify the item to update.</param>
         /// <param name="item">The item to update</param>
         /// <returns>The original value</returns>
         T Update(Func<InventoryItem, bool> predicate, T item);

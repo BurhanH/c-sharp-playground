@@ -8,7 +8,7 @@ namespace BasicExercises.Tests
     {
 
         [Fact]
-        public void Excercise1_swap()
+        public void Exercise1_swap()
         {
             Random rand = new Random();
             //Given
@@ -22,14 +22,14 @@ namespace BasicExercises.Tests
             var expected1st = array[second];
             //When
             //We do a swap
-            Excercise1.Swap(array, first, second);
+            Exercise1.Swap(array, first, second);
             //Then
             Assert.Equal(expected1st, array[first]);
             Assert.Equal(expected2nd, array[second]);
         }
 
         [Fact]
-        public void Excercise1_sort()
+        public void Exercise1_sort()
         {
             Random rand = new Random();
             //Given
@@ -39,7 +39,7 @@ namespace BasicExercises.Tests
             var expectedResult = array.OrderBy(t => t).ToArray();
             //When
             //We do a swap
-            int[] result = Excercise1.Sort(array);
+            int[] result = Exercise1.Sort(array);
 
             for(var i=0; i< result.Length; ++i)
             {
@@ -49,7 +49,7 @@ namespace BasicExercises.Tests
         }
         
         [Fact]
-        public void Excercise1_sort_performance()
+        public void Exercise1_sort_performance()
         {
             Random rand = new Random();
             //Given
@@ -59,7 +59,7 @@ namespace BasicExercises.Tests
             var expectedResult = array.OrderBy(t => t).ToArray();
             //When
             //We do a swap
-            int[] result = Excercise1.Sort(array);
+            int[] result = Exercise1.Sort(array);
 
             for(var i=0; i< result.Length; ++i)
             {

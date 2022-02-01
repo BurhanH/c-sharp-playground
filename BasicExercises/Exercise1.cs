@@ -1,6 +1,6 @@
 ﻿namespace BasicExercises
 {
-    public static class Excercise1
+    public static class Exercise1
     {
         /// <summary>
         /// Swap the elements in the array at index1 and index2

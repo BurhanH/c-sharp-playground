@@ -24,7 +24,29 @@ namespace BasicExercises.Tests
         [Fact]
         public void Get_stock_item_by_name()
         {
-            throw new NotImplementedException();
+             // Arrange
+            var data = new List<StoreItem>
+            {
+                new StoreItem { Name = "Widget", Count = 1 },
+            }.AsQueryable();
+
+            var mockRepository = new Mock<DbSet<StoreItem>>();
+            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Provider).Returns(data.Provider);
+            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Expression).Returns(data.Expression);
+            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.ElementType).Returns(data.ElementType);
+            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+            var mockContext = new Mock<RepositoryContext>();
+            mockContext.Setup(m => m.theStore).Returns(mockRepository.Object);
+
+            var sut = new StoreService(mockContext.Object); // sut - system under test
+
+            // Act
+            var item = sut.GetByName("Widget");
+
+            // Assert
+            Assert.Equal("Widget", item.Name);
+            Assert.Equal(1, item.Count);
         }
 
         [Fact]

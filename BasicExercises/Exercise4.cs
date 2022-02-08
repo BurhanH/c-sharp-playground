@@ -57,7 +57,7 @@ namespace BasicExercises
         public List<StoreItem> GetAllItems()
         {
             var query = from item in _context.theStore
-                        orderby item.Name
+                        orderby item.ItemId
                         select item;
 
             return query.ToList();

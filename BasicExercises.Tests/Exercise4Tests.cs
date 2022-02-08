@@ -94,14 +94,10 @@ namespace BasicExercises.Tests
 
             // Assert
             Assert.Equal(2, items.Count);
-            Assert.Equal("Juice Box", items[0].Name);
-            Assert.Equal(2, items[0].Count);
-            Assert.Equal("Widget", items[1].Name);
-            Assert.Equal(1, items[1].Count);
-
-            // NOTE! It was a surprise that the order in the data list is not the same as in the in-memory database,
-            //       looks like the order by name in the result data set.
-            // TODO - fix this!
+            Assert.Equal("Widget", items[0].Name);
+            Assert.Equal(1, items[0].Count);
+            Assert.Equal("Juice Box", items[1].Name);
+            Assert.Equal(2, items[1].Count);
         }
 
         [Fact]

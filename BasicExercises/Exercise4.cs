@@ -26,7 +26,7 @@ namespace BasicExercises
 
     public class StoreService
     {
-        private RepositoryContext _context;
+        private readonly RepositoryContext _context;
 
         public StoreService(RepositoryContext context)
         {

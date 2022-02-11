@@ -137,8 +137,6 @@ namespace BasicExercises.Tests
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sut.Stock("Widget", -1));
-            // NOTE! Something is wrong with the test.
-            // TODO - fix this!
         }
 
         [Fact]

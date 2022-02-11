@@ -1,36 +1,31 @@
-using Moq;
 using System;
 using Xunit;
 
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace BasicExercises.Tests
 {
     /// <summary>
     /// Unit tests for Exercise4
-    /// Uses Moq library and In-memory database.
+    /// Uses In-memory database.
     /// </summary>
+
+    // Note: If we will use the same database name for multiple tests, some test may fail.
+    //       The main reason is looks like DbContextOptionsBuilder reuses the same database. Instead of creating a new one.
+
     public class Exercise4Tests
     {
         [Fact]
         public void Add_stock_item()
         {
             // Arrange
-            var data = new List<StoreItem>{}.AsQueryable();
+            var options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseInMemoryDatabase("Tests1")
+                .Options;
+            var dbcontext = new RepositoryContext(options);
 
-            var mockRepository = new Mock<DbSet<StoreItem>>();
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
-            var mockContext = new Mock<RepositoryContext>();
-            mockContext.Setup(m => m.theStore).Returns(mockRepository.Object);
-
-            var sut = new StoreService(mockContext.Object); // sut - system under test
+            var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act
             var item = sut.Stock("Widget", 1);
@@ -44,27 +39,21 @@ namespace BasicExercises.Tests
         public void Get_stock_item_by_name()
         {
             // Arrange
-            var data = new List<StoreItem>
-            {
-                new StoreItem { Name = "Widget", Count = 1 },
-                new StoreItem { Name = "Juice Box", Count = 2 },
-            }.AsQueryable();
+            var options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseInMemoryDatabase(databaseName: "Tests2")
+                .Options;
+            var dbcontext = new RepositoryContext(options);
+            dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 1 });
+            dbcontext.theStore.Add(new StoreItem { Name = "Juice Box", Count = 2 });
+            dbcontext.SaveChanges();
 
-            var mockRepository = new Mock<DbSet<StoreItem>>();
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
-            var mockContext = new Mock<RepositoryContext>();
-            mockContext.Setup(m => m.theStore).Returns(mockRepository.Object);
-
-            var sut = new StoreService(mockContext.Object); // sut - system under test
+            var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act
             var item = sut.GetByName("Widget");
 
             // Assert
+            Assert.NotNull(item);
             Assert.Equal("Widget", item.Name);
             Assert.Equal(1, item.Count);
         }
@@ -73,27 +62,21 @@ namespace BasicExercises.Tests
         public void Get_all_stock_items()
         {
             // Arrange
-            var data = new List<StoreItem>
-            {
-                new StoreItem { Name = "Widget", Count = 1 },
-                new StoreItem { Name = "Juice Box", Count = 2 },
-            }.AsQueryable();
+           var options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseInMemoryDatabase(databaseName: "Tests3")
+                .Options;
+            var dbcontext = new RepositoryContext(options);
+            dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 1 });
+            dbcontext.theStore.Add(new StoreItem { Name = "Juice Box", Count = 2 });
+            dbcontext.SaveChanges();
 
-            var mockRepository = new Mock<DbSet<StoreItem>>();
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
-            var mockContext = new Mock<RepositoryContext>();
-            mockContext.Setup(m => m.theStore).Returns(mockRepository.Object);
-
-            var sut = new StoreService(mockContext.Object); // sut - system under test
+            var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act
             var items = sut.GetAllItems();
 
             // Assert
+            Assert.NotEmpty(items);
             Assert.Equal(2, items.Count);
             Assert.Equal("Widget", items[0].Name);
             Assert.Equal(1, items[0].Count);
@@ -105,21 +88,15 @@ namespace BasicExercises.Tests
         public void Stock_increases_an_item_counts()
         {
             // Arrange
-            var data = new List<StoreItem>
-            {
-                new StoreItem { Name = "Widget", Count = 1 },
-            }.AsQueryable();
+            var options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseInMemoryDatabase(databaseName: "Tests4")
+                .Options;
+            var dbcontext = new RepositoryContext(options);
+            dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 1 });
+            dbcontext.theStore.Add(new StoreItem { Name = "Juice Box", Count = 2 });
+            dbcontext.SaveChanges();
 
-            var mockRepository = new Mock<DbSet<StoreItem>>();
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
-            var mockContext = new Mock<RepositoryContext>();
-            mockContext.Setup(m => m.theStore).Returns(mockRepository.Object);
-
-            var sut = new StoreService(mockContext.Object); // sut - system under test
+            var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act
             var item = sut.Stock("Widget", 1);
@@ -132,8 +109,12 @@ namespace BasicExercises.Tests
         public void Stock_does_not_allow_negatives()
         {
             // Arrange
-            var mockContext = new Mock<RepositoryContext>();
-            var sut = new StoreService(mockContext.Object); // sut - system under test
+            var options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseInMemoryDatabase(databaseName: "Tests4")
+                .Options;
+            var dbcontext = new RepositoryContext(options);
+
+            var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sut.Stock("Widget", -1));
@@ -143,21 +124,15 @@ namespace BasicExercises.Tests
         public void Buy_removes_an_item_count()
         {
             // Arrange
-            var data = new List<StoreItem>
-            {
-                new StoreItem { Name = "Widget", Count = 2 },
-            }.AsQueryable();
+            var options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseInMemoryDatabase(databaseName: "Tests5")
+                .Options;
+            var dbcontext = new RepositoryContext(options);
+            dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 2 });
+            dbcontext.theStore.Add(new StoreItem { Name = "Juice Box", Count = 2 });
+            dbcontext.SaveChanges();
 
-            var mockRepository = new Mock<DbSet<StoreItem>>();
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
-            var mockContext = new Mock<RepositoryContext>();
-            mockContext.Setup(m => m.theStore).Returns(mockRepository.Object);
-
-            var sut = new StoreService(mockContext.Object); // sut - system under test
+            var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act
             var item = sut.Buy("Widget", 1);
@@ -170,25 +145,19 @@ namespace BasicExercises.Tests
         public void Buy_does_not_allow_negatives()
         {
             // Arrange
-            var data = new List<StoreItem>
-            {
-                new StoreItem { Name = "Widget", Count = 1 },
-            }.AsQueryable();
+            var options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseInMemoryDatabase(databaseName: "Tests6")
+                .Options;
+            var dbcontext = new RepositoryContext(options);
+            dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 2 });
+            dbcontext.theStore.Add(new StoreItem { Name = "Juice Box", Count = 1 });
+            dbcontext.SaveChanges();
 
-            var mockRepository = new Mock<DbSet<StoreItem>>();
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockRepository.As<IQueryable<StoreItem>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
-            var mockContext = new Mock<RepositoryContext>();
-            mockContext.Setup(m => m.theStore).Returns(mockRepository.Object);
-
-            var sut = new StoreService(mockContext.Object); // sut - system under test
+            var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sut.Buy("Widget", -1));
-            Assert.Throws<InvalidOperationException>(() => sut.Buy("Widget", 2));
+            Assert.Throws<InvalidOperationException>(() => sut.Buy("Juice Box", 2));
         }
     }
 }

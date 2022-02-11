@@ -1,19 +1,24 @@
 using System;
 
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace BasicExercises
 {
     public class RepositoryContext: DbContext
     {
+        public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
+        {
+
+        }
         public virtual DbSet<StoreItem> theStore { get; set; }
+
     }
 
     public class StoreItem
     {
-        public int ItemId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Count { get; set; }
 
@@ -35,12 +40,11 @@ namespace BasicExercises
                 throw new InvalidOperationException("Item count can not be negative or zero!");
             }
             var item = GetByName(name);
-            if (item.Name != null)
+            if (item != null)
             {
                 item.Count += count;
-                _context.Entry(item).State = EntityState.Modified;
-            } 
-            else 
+            }
+            else
             {
                 item = new StoreItem
                 {
@@ -57,7 +61,7 @@ namespace BasicExercises
         public List<StoreItem> GetAllItems()
         {
             var query = from item in _context.theStore
-                        orderby item.ItemId
+                        orderby item.Id
                         select item;
 
             return query.ToList();

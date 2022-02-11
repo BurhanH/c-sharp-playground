@@ -21,7 +21,7 @@ namespace BasicExercises
 
     public class StoreService
     {
-        private readonly RepositoryContext _context;
+        private RepositoryContext _context;
 
         public StoreService(RepositoryContext context)
         {
@@ -74,6 +74,10 @@ namespace BasicExercises
 
         public StoreItem Buy(string name, int count)
         {
+            if (count <= 0)
+            {
+                throw new InvalidOperationException("Item count can not be negative or zero!");
+            }
             var item = _context.theStore.FirstOrDefault(i => i.Name == name); // Possible that can return more than one item!
             if (item == null)
             {

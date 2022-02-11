@@ -47,6 +47,7 @@ namespace BasicExercises.Tests
             var data = new List<StoreItem>
             {
                 new StoreItem { Name = "Widget", Count = 1 },
+                new StoreItem { Name = "Juice Box", Count = 2 },
             }.AsQueryable();
 
             var mockRepository = new Mock<DbSet<StoreItem>>();
@@ -146,7 +147,7 @@ namespace BasicExercises.Tests
             // Arrange
             var data = new List<StoreItem>
             {
-                new StoreItem { Name = "Widget", Count = 1 },
+                new StoreItem { Name = "Widget", Count = 2 },
             }.AsQueryable();
 
             var mockRepository = new Mock<DbSet<StoreItem>>();
@@ -164,7 +165,7 @@ namespace BasicExercises.Tests
             var item = sut.Buy("Widget", 1);
 
             // Assert
-            Assert.Equal(0, item.Count);
+            Assert.Equal(1, item.Count);
         }
 
         [Fact]
@@ -190,8 +191,6 @@ namespace BasicExercises.Tests
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sut.Buy("Widget", -1));
             Assert.Throws<InvalidOperationException>(() => sut.Buy("Widget", 2));
-            // NOTE! Something is wrong with the test.
-            // TODO - fix this!
         }
     }
 }

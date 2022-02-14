@@ -18,12 +18,12 @@ namespace BasicExercises.Tests
     {
         [Theory]
         [InlineData("Widget", 1)]
-        [InlineData("Juice Box", 2)]
+        [InlineData("Juice box", 2)]
         public void Add_stock_item(string name, int count)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase("Tests0")
+                .UseInMemoryDatabase(databaseName:"Tests1")
                 .Options;
             var dbcontext = new RepositoryContext(options);
 
@@ -45,7 +45,7 @@ namespace BasicExercises.Tests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase("Tests1")
+                .UseInMemoryDatabase(databaseName:"Tests2")
                 .Options;
             var dbcontext = new RepositoryContext(options);
 
@@ -61,16 +61,16 @@ namespace BasicExercises.Tests
 
         [Theory]
         [InlineData("Widget", 1)]
-        [InlineData("Juice Box", 2)]
+        [InlineData("Juice box", 2)]
         public void Get_stock_item_by_name(string name, int count)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase(databaseName: "Tests2")
+                .UseInMemoryDatabase(databaseName: "Tests3")
                 .Options;
             var dbcontext = new RepositoryContext(options);
             dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 1 });
-            dbcontext.theStore.Add(new StoreItem { Name = "Juice Box", Count = 2 });
+            dbcontext.theStore.Add(new StoreItem { Name = "Juice box", Count = 2 });
             dbcontext.SaveChanges();
 
             var sut = new StoreService(dbcontext); // SUT - system under test
@@ -89,11 +89,11 @@ namespace BasicExercises.Tests
         {
             // Arrange
            var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase(databaseName: "Tests3")
+                .UseInMemoryDatabase(databaseName: "Tests4")
                 .Options;
             var dbcontext = new RepositoryContext(options);
             dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 1 });
-            dbcontext.theStore.Add(new StoreItem { Name = "Juice Box", Count = 2 });
+            dbcontext.theStore.Add(new StoreItem { Name = "Juice box", Count = 2 });
             dbcontext.SaveChanges();
 
             var sut = new StoreService(dbcontext); // SUT - system under test
@@ -106,7 +106,7 @@ namespace BasicExercises.Tests
             Assert.Equal(2, items.Count);
             Assert.Equal("Widget", items[0].Name);
             Assert.Equal(1, items[0].Count);
-            Assert.Equal("Juice Box", items[1].Name);
+            Assert.Equal("Juice box", items[1].Name);
             Assert.Equal(2, items[1].Count);
         }
 
@@ -117,7 +117,7 @@ namespace BasicExercises.Tests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase(databaseName: "Tests4")
+                .UseInMemoryDatabase(databaseName: "Tests5")
                 .Options;
             var dbcontext = new RepositoryContext(options);
             dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 1 });
@@ -140,7 +140,7 @@ namespace BasicExercises.Tests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase(databaseName: "Tests4")
+                .UseInMemoryDatabase(databaseName: "Tests6")
                 .Options;
             var dbcontext = new RepositoryContext(options);
 
@@ -152,16 +152,16 @@ namespace BasicExercises.Tests
 
         [Theory]
         [InlineData("Widget", 1, 1)]
-        [InlineData("Juice Box", 2, 0)]
+        [InlineData("Juice box", 2, 0)]
         public void Buy_removes_an_item_count(string name, int count, int expectedCount)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase(databaseName: "Tests5")
+                .UseInMemoryDatabase(databaseName: "Tests7")
                 .Options;
             var dbcontext = new RepositoryContext(options);
             dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 2 });
-            dbcontext.theStore.Add(new StoreItem { Name = "Juice Box", Count = 2 });
+            dbcontext.theStore.Add(new StoreItem { Name = "Juice box", Count = 2 });
             dbcontext.SaveChanges();
 
             var sut = new StoreService(dbcontext); // SUT - system under test
@@ -175,17 +175,17 @@ namespace BasicExercises.Tests
 
         [Theory]
         [InlineData("Widget", -1)]
-        [InlineData("Juice Box", 2)]
-        [InlineData("Juice Box", 0)]
+        [InlineData("Juice box", 2)]
+        [InlineData("Juice box", 0)]
         public void Buy_does_not_allow_negatives_or_zero(string name, int count)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase(databaseName: "Tests6")
+                .UseInMemoryDatabase(databaseName: "Tests8")
                 .Options;
             var dbcontext = new RepositoryContext(options);
             dbcontext.theStore.Add(new StoreItem { Name = "Widget", Count = 2 });
-            dbcontext.theStore.Add(new StoreItem { Name = "Juice Box", Count = 1 });
+            dbcontext.theStore.Add(new StoreItem { Name = "Juice box", Count = 1 });
             dbcontext.SaveChanges();
 
             var sut = new StoreService(dbcontext); // SUT - system under test
@@ -201,7 +201,7 @@ namespace BasicExercises.Tests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase("Tests7")
+                .UseInMemoryDatabase(databaseName:"Tests9")
                 .Options;
             var dbcontext = new RepositoryContext(options);
 

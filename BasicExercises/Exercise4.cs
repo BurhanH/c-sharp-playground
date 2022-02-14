@@ -46,6 +46,10 @@ namespace BasicExercises
 
         public StoreItem Stock(string name, int count)
         {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(name.Trim()))
+            {
+                throw new InvalidOperationException("Item name can not be empty or null!");
+            }
             if ( count <= 0 )
             {
                 throw new InvalidOperationException("Item count can not be negative or zero!");

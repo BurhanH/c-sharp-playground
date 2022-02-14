@@ -29,7 +29,9 @@ namespace BasicExercises
         private string NormalizeName(string name)
         {
             string result = (name ?? "").Trim();
-            return result;
+            char[] letters = result.ToLower().ToCharArray();
+            letters[0] = char.ToUpper(letters[0]);
+            return new string(letters);
         }
         public int Count { get; set; }
 

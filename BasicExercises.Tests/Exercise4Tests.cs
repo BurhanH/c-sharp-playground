@@ -23,7 +23,7 @@ namespace BasicExercises.Tests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseInMemoryDatabase("Tests1")
+                .UseInMemoryDatabase("Tests0")
                 .Options;
             var dbcontext = new RepositoryContext(options);
 
@@ -34,6 +34,28 @@ namespace BasicExercises.Tests
 
             // Assert
             Assert.Equal(name, item.Name);
+            Assert.Equal(count, item.Count);
+        }
+
+        [Theory]
+        [InlineData("nerf gun", 1, "Nerf gun")]
+        [InlineData("lEgO set", 14, "Lego set")]
+        [InlineData("  test item  ", 14, "Test item")]
+        public void Add_stock_item_uppercease_lowercase_name(string name, int count, string expectedName)
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseInMemoryDatabase("Tests1")
+                .Options;
+            var dbcontext = new RepositoryContext(options);
+
+            var sut = new StoreService(dbcontext); // SUT - system under test
+
+            // Act
+            var item = sut.Stock(name, count);
+
+            // Assert
+            Assert.Equal(expectedName, item.Name);
             Assert.Equal(count, item.Count);
         }
 

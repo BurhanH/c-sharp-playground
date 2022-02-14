@@ -16,8 +16,10 @@ namespace BasicExercises.Tests
 
     public class Exercise4Tests
     {
-        [Fact]
-        public void Add_stock_item()
+        [Theory]
+        [InlineData("Widget", 1)]
+        [InlineData("Juice Box", 2)]
+        public void Add_stock_item(string name, int count)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
@@ -28,15 +30,17 @@ namespace BasicExercises.Tests
             var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act
-            var item = sut.Stock("Widget", 1);
+            var item = sut.Stock(name, count);
 
             // Assert
-            Assert.Equal("Widget", item.Name);
-            Assert.Equal(1, item.Count);
+            Assert.Equal(name, item.Name);
+            Assert.Equal(count, item.Count);
         }
 
-        [Fact]
-        public void Get_stock_item_by_name()
+        [Theory]
+        [InlineData("Widget", 1)]
+        [InlineData("Juice Box", 2)]
+        public void Get_stock_item_by_name(string name, int count)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
@@ -50,12 +54,12 @@ namespace BasicExercises.Tests
             var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act
-            var item = sut.GetByName("Widget");
+            var item = sut.GetByName(name);
 
             // Assert
             Assert.NotNull(item);
-            Assert.Equal("Widget", item.Name);
-            Assert.Equal(1, item.Count);
+            Assert.Equal(name, item.Name);
+            Assert.Equal(count, item.Count);
         }
 
         [Fact]
@@ -84,8 +88,10 @@ namespace BasicExercises.Tests
             Assert.Equal(2, items[1].Count);
         }
 
-        [Fact]
-        public void Stock_increases_an_item_counts()
+        [Theory]
+        [InlineData("Widget", 1, 2)]
+        [InlineData("Juice Box", 2, 4)]
+        public void Stock_increases_an_item_counts(string name, int count, int expectedCount)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
@@ -99,14 +105,16 @@ namespace BasicExercises.Tests
             var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act
-            var item = sut.Stock("Widget", 1);
+            var item = sut.Stock(name, count);
 
             // Assert
-            Assert.Equal(2, item.Count);
+            Assert.Equal(expectedCount, item.Count);
         }
 
-        [Fact]
-        public void Stock_does_not_allow_negatives()
+        [Theory]
+        [InlineData("Widget", -1)]
+        [InlineData("Juice Box", 0)]
+        public void Stock_does_not_allow_negatives_or_zero(string name, int count)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
@@ -117,11 +125,13 @@ namespace BasicExercises.Tests
             var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.Stock("Widget", -1));
+            Assert.Throws<InvalidOperationException>(() => sut.Stock(name, count));
         }
 
-        [Fact]
-        public void Buy_removes_an_item_count()
+        [Theory]
+        [InlineData("Widget", 1, 1)]
+        [InlineData("Juice Box", 2, 0)]
+        public void Buy_removes_an_item_count(string name, int count, int expectedCount)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
@@ -135,14 +145,17 @@ namespace BasicExercises.Tests
             var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act
-            var item = sut.Buy("Widget", 1);
+            var item = sut.Buy(name, count);
 
             // Assert
-            Assert.Equal(1, item.Count);
+            Assert.Equal(expectedCount, item.Count);
         }
 
-        [Fact]
-        public void Buy_does_not_allow_negatives()
+        [Theory]
+        [InlineData("Widget", -1)]
+        [InlineData("Juice Box", 2)]
+        [InlineData("Juice Box", 0)]
+        public void Buy_does_not_allow_negatives_or_zero(string name, int count)
         {
             // Arrange
             var options = new DbContextOptionsBuilder<RepositoryContext>()
@@ -156,8 +169,24 @@ namespace BasicExercises.Tests
             var sut = new StoreService(dbcontext); // SUT - system under test
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.Buy("Widget", -1));
-            Assert.Throws<InvalidOperationException>(() => sut.Buy("Juice Box", 2));
+            Assert.Throws<InvalidOperationException>(() => sut.Buy(name, count));
+        }
+        [Theory]
+        [InlineData("", 1)]
+        [InlineData(" ", 10)]
+        [InlineData(null, 5)]
+        public void Stock_does_not_allow_empty_names(string name, int count)
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseInMemoryDatabase("Tests7")
+                .Options;
+            var dbcontext = new RepositoryContext(options);
+
+            var sut = new StoreService(dbcontext); // SUT - system under test
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => sut.Stock(name, count));
         }
     }
 }

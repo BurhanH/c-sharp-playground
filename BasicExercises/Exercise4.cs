@@ -19,7 +19,18 @@ namespace BasicExercises
     public class StoreItem
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        private string _name;
+        public string Name 
+        { 
+            get => _name; 
+            set => _name = NormalizeName(value); 
+        }
+
+        private string NormalizeName(string name)
+        {
+            string result = (name ?? "").Trim();
+            return result;
+        }
         public int Count { get; set; }
 
     }
